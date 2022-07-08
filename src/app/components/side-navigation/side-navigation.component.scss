@@ -1,0 +1,112 @@
+$height: 40px;
+$logo-padding-x: 16px;
+$logo-padding-y: 8px;
+
+.container {
+    background-color: #063647;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    .header {
+        display: flex;
+
+        .logo {
+            height: $height;
+            padding: $logo-padding-y $logo-padding-x;
+
+            img {
+                height: 100%;
+            }
+        }
+
+        .title {
+            color: white;
+            font-size: 1.25em;
+            font-weight: 600;
+            line-height: $height + ($logo-padding-y * 2);
+            text-align: center;
+        }
+
+        .action {
+            color: white;
+            cursor: pointer;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: auto;
+            padding: 0 15px;
+        }
+    }
+
+    .item-wrapper {
+        height: 100%;
+
+        .items {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+
+            .navigation-item-list {
+                color: #96becc;
+                font-weight: 300;
+                height: 100%;
+                list-style-type: none;
+                padding: 0;
+
+                .navigation-item {
+                    padding: 6px 16px;
+
+                    &.active {
+                        background-color: rgba(184, 222, 255, 0.23);
+                        border-left: white solid 4px;
+                        color: white;
+                    }
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.231);
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .footer {
+                border-top: 2px solid #124c63;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        height: auto;
+        width: 100vw;
+
+        .header {
+            grid-template-columns: 1fr 4fr 1fr;
+
+            .title {
+                text-align: left;
+            }
+
+            .action {
+                display: flex;
+            }
+        }
+
+        .item-wrapper {
+            overflow: hidden;
+
+            .items {
+                margin-top: -100vh;
+                transition: margin ease-in-out 400ms;
+
+                &.shown {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}

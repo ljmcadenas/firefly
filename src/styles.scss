@@ -1,0 +1,57 @@
+html, body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Open Sans', sans-serif;
+    color: #333333;
+
+    select {
+        padding: 0.4em 0 0.4em 1em;
+        border-radius: 1em;
+        border: 1px solid #aed9e8;
+        box-shadow: 0 0 2px #aed9e8 inset;
+        font-size: 0.9em;
+        background-color: white;
+    }
+
+    table {
+        margin-top: 1vh;
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+
+        th {
+            color: #b3b3b3;
+        }
+
+        td,
+        th {
+            padding: 4px 0;
+        }
+
+        tr {
+            border-top: 1px solid #eceeef;
+        }
+    }
+
+    .tag {
+        border-radius: 0.25em;
+        font-size: 0.75em;
+        line-height: 1em;
+        background-color: #f5a623;
+        color: white;
+        padding: 0.1em 0.3em;
+        font-weight: 800;
+        margin-left: 0.25em;
+    }
+
+    .heading {
+        font-weight: 400;
+        margin: 0 0 0 30px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .heading {
+            margin-left: 15px;
+        }
+    }
+}
