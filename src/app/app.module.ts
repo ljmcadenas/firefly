@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { OverviewComponent } from './components/overview/overview.component';
+import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { TopMusicComponent } from './components/top-music/top-music.component';
 import { MessageBannerService } from './services/message-banner/message-banner.service';
 
@@ -15,9 +16,9 @@ import { MessageBannerService } from './services/message-banner/message-banner.s
     TopMusicComponent
   ],
   imports: [
-    BrowserModule
+    CommonModule,
+    AppRoutingModule
   ],
   providers: [MessageBannerService],
-  bootstrap: [AppComponent]
 })
 export class AppModule { }
