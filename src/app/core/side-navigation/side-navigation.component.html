@@ -9,10 +9,15 @@
 			<span class="side-navigation__brand-name">DataDashboard</span>
 		</a>
 
-		<span class="d-md-none material-icons text-white">menu</span>
+		<span class="d-md-none material-icons text-white" (click)="toggleMenu()"
+			>menu</span
+		>
 	</div>
 
-	<div class="side-navigation__content">
+	<div
+		class="side-navigation__content d-md-flex"
+		[@slideInOutAnimation]="slideInOutAnimationCurrentState"
+	>
 		<div>
 			<ul class="p-0 m-0">
 				<li
