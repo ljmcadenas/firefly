@@ -1,0 +1,36 @@
+<table class="table">
+	<thead>
+		<tr>
+			<th
+				*ngFor="let col of colDef; trackBy: trackColsBy"
+				scope="col"
+				[style.width]="col.width"
+			>
+				{{ col.label }}
+			</th>
+			<th scope="col" class="grid__column grid__column--controls"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let row of data; trackBy: trackDataBy">
+			<ng-container *ngFor="let col of colDef; trackBy: trackColsBy">
+				<th *ngIf="col.field === 'id'" scope="row">
+					{{ row[col.field] }}
+				</th>
+				<td *ngIf="col.field !== 'id'">
+					{{ row[col.field] }}
+				</td>
+			</ng-container>
+
+			<!-- TODO: improve grid so it can be provided with custom templates per column -->
+			<td>
+				<span class="material-icons text-primary" (click)="removeRow()"
+					>delete</span
+				>
+				<span class="material-icons text-primary" (click)="shareRow()"
+					>share</span
+				>
+			</td>
+		</tr>
+	</tbody>
+</table>
