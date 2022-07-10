@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { OverviewComponent } from './components/overview/overview.component';
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import { TopMusicComponent } from './components/top-music/top-music.component';
-import { MessageBannerService } from './services/message-banner/message-banner.service';
+import { MessageBannerModule } from './core/message-banner/message-banner.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +19,6 @@ import { MessageBannerService } from './services/message-banner/message-banner.s
     CommonModule,
     AppRoutingModule
   ],
-  providers: [MessageBannerService],
+		MessageBannerModule,
 })
 export class AppModule { }

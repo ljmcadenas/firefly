@@ -1,6 +1,11 @@
-<div id="main-grid">
-    <side-navigation></side-navigation>
-    <div id="content">
-        <router-outlet></router-outlet>
-    </div>
+<div class="main">
+	<!-- <side-navigation></side-navigation> -->
+	<firefly-side-navigation></firefly-side-navigation>
+	<section class="content">
+		<firefly-message-banner></firefly-message-banner>
+
+		<main>
+			<router-outlet></router-outlet>
+		</main>
+	</section>
 </div>

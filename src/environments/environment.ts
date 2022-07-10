@@ -6,6 +6,7 @@ export const environment = {
 	production: false,
 	services: {
 		overview: 'https://api.firefly.co/overview',
+		userSettings: 'https://api.firefly.co/user-settings',
 	},
 };
 
