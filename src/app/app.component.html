@@ -1,6 +1,8 @@
 <div class="main">
-	<!-- <side-navigation></side-navigation> -->
-	<firefly-side-navigation></firefly-side-navigation>
+	<firefly-side-navigation
+		[menu]="menuItems"
+		(menuClicked)="onMenuClicked($event)"
+	></firefly-side-navigation>
 	<section class="content">
 		<firefly-message-banner></firefly-message-banner>
 
