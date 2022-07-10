@@ -40,11 +40,11 @@ $navigation-color: #96becc;
 }
 
 .side-navigation__content {
-    display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex: 1;
     width: 100%;
+    
 }
 
 .side-navigation__item {
