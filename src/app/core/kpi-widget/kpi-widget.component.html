@@ -1,0 +1,16 @@
+<div class="kpi-widget__state rounded-circle text-white">
+	<div class="kpi-widget__state-inner">
+		<div class="kpi-widget__value text-truncate text-center">
+			<ng-content select="[kpiWidgetValue]"></ng-content>
+		</div>
+		<div
+			class="kpi-widget__value-description text-truncate text-center small"
+		>
+			<ng-content select="[kpiWidgetValueDescription]"></ng-content>
+		</div>
+	</div>
+</div>
+
+<div class="kpi-widget__label text-truncate-multiline text-center px-4">
+	{{ label }}
+</div>

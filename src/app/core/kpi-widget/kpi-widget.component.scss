@@ -1,0 +1,51 @@
+@use "node_modules/bootstrap/scss/bootstrap";
+
+:host {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: 242px;
+    height: 174px;
+}
+
+.kpi-widget__state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 118px;
+    height: 118px;
+    border: 3px solid;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 0px 3px #fff, 0px 0px 3px 7px rgb(0 0 0 / 5%);
+
+    :host-context(.kpi-widget--danger) & {
+        background-color: bootstrap.theme-color("danger");
+        border-color: bootstrap.theme-color-level("danger", 3);
+    }
+
+    :host-context(.kpi-widget--success) & {
+        background-color: bootstrap.theme-color("success");
+        border-color: bootstrap.theme-color-level("success", 3);
+    }
+}
+
+.kpi-widget__state-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.kpi-widget__value, .kpi-widget__value-description {
+    width: 100%;
+}
+
+.kpi-widget__value {
+    font-size: 1.5rem;
+}
+
+.kpi-widget__label {
+    width: 100%;
+}
