@@ -1,0 +1,67 @@
+<nav class="side-navigation__nav">
+	<div class="side-navigation__header p-1 p-md-3">
+		<a class="side-navigation__brand" href="#">
+			<img
+				src="/assets/ff_logo.svg"
+				class="side-navigation__brand-logo d-inline-block"
+				alt="FireFly Logo"
+			/>
+			<span class="side-navigation__brand-name">DataDashboard</span>
+		</a>
+
+		<span class="d-md-none material-icons text-white">menu</span>
+	</div>
+
+	<div class="side-navigation__content">
+		<div>
+			<ul class="p-0 m-0">
+				<li
+					*ngFor="let menuItem of menu"
+					class="side-navigation__item text-truncate active"
+					[class.side-navigation__item--active]="rla.isActive"
+				>
+					<a
+						class="side-navigation__item-anchor font-weight-light"
+						(click)="onMenuClicked(menuItem)"
+						[routerLink]="menuItem.route"
+						routerLinkActive
+						#rla="routerLinkActive"
+					>
+						{{ menuItem.label }}
+						<span *ngIf="rla.isActive" class="sr-only">
+							(current)
+						</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="side-navigation__global">
+			<ul class="p-0 m-0">
+				<li class="side-navigation__item text-truncate active">
+					<a
+						href="javascript:void(0);"
+						class="side-navigation__item-anchor font-weight-light disabled"
+						(click)="onSettingsClicked()"
+					>
+						Settings
+					</a>
+				</li>
+				<li class="side-navigation__item text-truncate active">
+					<a
+						href="javascript:void(0);"
+						class="side-navigation__item-anchor font-weight-light disabled"
+						(click)="onLogoutClicked()"
+					>
+						Logout
+					</a>
+				</li>
+			</ul>
+
+			<div class="side-navigation__copyright small">
+				<span class="material-icons small"> copyright </span>
+				FireFly 2019
+			</div>
+		</div>
+	</div>
+</nav>
