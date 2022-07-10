@@ -1,0 +1,26 @@
+:host {
+    display: block;
+    // TODO theme
+    background-color: #D6EBF3;
+    border-bottom: 1px solid #AED9E8; box-shadow: 0 0 3px #479CBA;
+}
+
+.message-banner__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.message-banner__title {
+    font-size: 1.2rem;
+}
+
+.message-banner__action-button {
+    border-radius: 25px;
+
+    & + & {
+        margin-left: 20px;
+    }
+}
