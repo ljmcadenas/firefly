@@ -1,10 +1,12 @@
-<table class="table">
+<table class="grid__table table">
 	<thead>
 		<tr>
 			<th
 				*ngFor="let col of colDef; trackBy: trackColsBy"
 				scope="col"
 				[style.width]="col.width"
+				[class.text-left]="!col.textAlign || col.textAlign === 'left'"
+				[class.text-right]="col.textAlign === 'right'"
 			>
 				{{ col.label }}
 			</th>
@@ -14,10 +16,23 @@
 	<tbody>
 		<tr *ngFor="let row of data; trackBy: trackDataBy">
 			<ng-container *ngFor="let col of colDef; trackBy: trackColsBy">
-				<th *ngIf="col.field === 'id'" scope="row">
+				<th
+					*ngIf="col.field === 'id'"
+					scope="row"
+					[class.text-left]="
+						!col.textAlign || col.textAlign === 'left'
+					"
+					[class.text-right]="col.textAlign === 'right'"
+				>
 					{{ row[col.field] }}
 				</th>
-				<td *ngIf="col.field !== 'id'">
+				<td
+					*ngIf="col.field !== 'id'"
+					[class.text-left]="
+						!col.textAlign || col.textAlign === 'left'
+					"
+					[class.text-right]="col.textAlign === 'right'"
+				>
 					{{ row[col.field] }}
 				</td>
 			</ng-container>

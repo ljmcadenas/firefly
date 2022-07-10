@@ -1,0 +1,10 @@
+.overview__section {
+    &:not(:last-child) {
+        margin-bottom: 30px;
+    }
+}
+
+.overview__header {
+    padding: 10px 0;
+    margin-bottom: 7px;
+}

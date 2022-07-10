@@ -16,10 +16,10 @@
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+}
 
-    :not(:first-child) {
-        margin-top: 30px;
-    }
+.content__main {
+    padding: 20px;
 }
 
 @include media-breakpoint-up(md) { 
