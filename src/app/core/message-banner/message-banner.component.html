@@ -1,0 +1,22 @@
+<section class="message-banner__wrapper p-3 py-md-3 px-md-5">
+	<header class="message-banner__title">{{ message?.title }}</header>
+	<div class="py-3 pt-md-2 pb-md-3">
+		{{ message?.body }}
+	</div>
+	<footer>
+		<button
+			class="message-banner__action-button btn btn-secondary"
+			(click)="message?.cancelAction?.callback()"
+		>
+			<span class="material-icons small">close</span>
+			{{ message?.cancelAction?.label || "Cancel" }}
+		</button>
+		<button
+			class="message-banner__action-button btn btn-primary"
+			(click)="message?.okAction?.callback()"
+		>
+			<span class="material-icons small">done</span>
+			{{ message?.okAction?.label || "Ok" }}
+		</button>
+	</footer>
+</section>
