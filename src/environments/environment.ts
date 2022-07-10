@@ -7,6 +7,7 @@ export const environment = {
 	services: {
 		overview: 'https://api.firefly.co/overview',
 		userSettings: 'https://api.firefly.co/user-settings',
+		music: 'https://api.firefly.co/music',
 	},
 };
 

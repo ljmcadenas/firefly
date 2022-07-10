@@ -23,3 +23,67 @@
 		</firefly-kpi-widget>
 	</div>
 </section>
+
+<section>
+	<header>
+		<h2>Top Music</h2>
+	</header>
+	<div>
+		<firefly-tab-group>
+			<!-- Artists Tab -->
+			<firefly-tab title="Artists">
+				<ng-template tabBody>
+					<firefly-grid
+						[colDef]="artistGridColDef"
+						[data]="$any(artistGridData$ | async)"
+					></firefly-grid>
+				</ng-template>
+
+				<ng-template tabControls>
+					<div class="dropdown">
+						<select>
+							<option
+								class="placeholder"
+								value=""
+								disabled
+								selected
+								hidden
+							>
+								Order by
+							</option>
+							<option>Most Played</option>
+							<option>More Songs</option>
+						</select>
+					</div>
+				</ng-template>
+			</firefly-tab>
+
+			<!-- Songs Tab -->
+			<firefly-tab title="Songs">
+				<p>Coming soon!</p>
+			</firefly-tab>
+
+			<!-- Moods Tab -->
+			<firefly-tab>
+				<ng-template tabTitle>
+					Moods
+					<span class="badge badge-light bg-warning text-white"
+						>21</span
+					>
+				</ng-template>
+
+				<ng-template tabBody>
+					<p>Coming soon!</p>
+				</ng-template>
+			</firefly-tab>
+
+			<ng-container tabFooter>
+				<div class="text-right">
+					<button class="btn btn-primary" [routerLink]="['../music']">
+						View more music data >
+					</button>
+				</div>
+			</ng-container>
+		</firefly-tab-group>
+	</div>
+</section>

@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { GridColDef } from '../core/grid/models/grid-col-def.interface';
+import { GridData } from '../core/grid/models/grid-data.interface';
 import { Kpi } from '../core/kpi-widget/models/kpi.interface';
+import { MusicApiService } from '../music/api/music-api.service';
 import { KpiDto } from './api/dtos/kpi.dto';
 import { OverviewApiService } from './api/overview-api.service';
 
@@ -13,8 +16,13 @@ import { OverviewApiService } from './api/overview-api.service';
 })
 export class OverviewComponent implements OnInit {
 	public kpiData$!: Observable<Kpi[]>;
+	public artistGridColDef!: GridColDef[];
+	public artistGridData$!: Observable<GridData[]>;
 
-	constructor(private overviewApiService: OverviewApiService) {}
+	constructor(
+		private overviewApiService: OverviewApiService,
+		private musicApiService: MusicApiService
+	) {}
 
 	public ngOnInit(): void {
 		this.kpiData$ = this.overviewApiService.getKpi().pipe(
@@ -26,6 +34,7 @@ export class OverviewComponent implements OnInit {
 				}));
 			})
 		);
+		this.setupTopMusic();
 	}
 
 	public trackKpi(_i: number, value: Kpi): number {
@@ -38,5 +47,38 @@ export class OverviewComponent implements OnInit {
 
 	private calculateValueDiff(kpi: KpiDto): number {
 		return Math.abs(kpi.current.value - kpi.previous.value);
+	}
+
+	private setupTopMusic(): void {
+		this.artistGridColDef = [
+			{
+				field: 'id',
+				label: '#',
+				width: '5%',
+			},
+			{
+				field: 'artist',
+				label: 'ARTIST',
+				width: '60%',
+			},
+			{
+				field: 'plays',
+				label: 'PLAYS',
+				width: '10%',
+			},
+			{
+				field: 'songs',
+				label: 'SONGS',
+				width: '10%',
+			},
+		];
+
+		this.artistGridData$ = this.musicApiService
+			.getTopMusic()
+			.pipe(
+				map((dtos) =>
+					dtos.map(({ id, ...rest }) => ({ id, ...rest } as GridData))
+				)
+			);
 	}
 }
