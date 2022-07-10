@@ -5,22 +5,44 @@
 	<div
 		class="d-flex flex-column flex-md-row justify-content-around align-items-center"
 	>
-		<firefly-kpi-widget
-			*ngFor="let kpi of kpiData$ | async; trackBy: trackKpi"
-			[label]="kpi.label"
-			[status]="kpi.meetTarget ? 'success' : 'danger'"
+		<ng-container
+			*ngIf="
+				(connectionErrorState$ | async)?.getKpi === true;
+				else noKpisError
+			"
 		>
-			<ng-container kpiWidgetValue>{{ kpi.current.value }}</ng-container>
-			<ng-container kpiWidgetValueDescription>
-				<span class="material-icons small font-weight-bold">{{
-					kpi.meetTarget ? "arrow_upward" : "arrow_downward"
-				}}</span>
-				<span class="font-weight-bold m-1">{{ kpi.valueDiff }}</span>
-				<span class="font-italic font-weight-light">{{
-					kpi | kpiFrequencyValueDescription: "days"
-				}}</span>
+			Error loading kpis
+		</ng-container>
+
+		<ng-template #noKpisError>
+			<ng-container
+				*ngIf="
+					(loadingState$ | async)?.getKpi === false;
+					else loadingTemplate
+				"
+			>
+				<firefly-kpi-widget
+					*ngFor="let kpi of kpiData$ | async; trackBy: trackKpi"
+					[label]="kpi.label"
+					[status]="kpi.meetTarget ? 'success' : 'danger'"
+				>
+					<ng-container kpiWidgetValue>{{
+						kpi.current.value
+					}}</ng-container>
+					<ng-container kpiWidgetValueDescription>
+						<span class="material-icons small font-weight-bold">{{
+							kpi.meetTarget ? "arrow_upward" : "arrow_downward"
+						}}</span>
+						<span class="font-weight-bold m-1">{{
+							kpi.valueDiff
+						}}</span>
+						<span class="font-italic font-weight-light">{{
+							kpi | kpiFrequencyValueDescription: "days"
+						}}</span>
+					</ng-container>
+				</firefly-kpi-widget>
 			</ng-container>
-		</firefly-kpi-widget>
+		</ng-template>
 	</div>
 </section>
 
@@ -28,62 +50,90 @@
 	<header>
 		<h2>Top Music</h2>
 	</header>
-	<div>
-		<firefly-tab-group>
-			<!-- Artists Tab -->
-			<firefly-tab title="Artists">
-				<ng-template tabBody>
-					<firefly-grid
-						[colDef]="artistGridColDef"
-						[data]="$any(artistGridData$ | async)"
-					></firefly-grid>
-				</ng-template>
+	<div class="text-center">
+		<ng-container
+			*ngIf="
+				(connectionErrorState$ | async)?.getTopMusic === true;
+				else noTopMusicError
+			"
+		>
+			Error loading top music
+		</ng-container>
 
-				<ng-template tabControls>
-					<div class="dropdown">
-						<select>
-							<option
-								class="placeholder"
-								value=""
-								disabled
-								selected
-								hidden
+		<ng-template #noTopMusicError>
+			<ng-container
+				*ngIf="
+					(loadingState$ | async)?.getTopMusic === false;
+					else loadingTemplate
+				"
+			>
+				<firefly-tab-group>
+					<!-- Artists Tab -->
+					<firefly-tab title="Artists">
+						<ng-template tabBody>
+							<firefly-grid
+								[colDef]="artistGridColDef"
+								[data]="$any(artistGridData$ | async)"
+							></firefly-grid>
+						</ng-template>
+
+						<ng-template tabControls>
+							<div class="dropdown">
+								<select>
+									<option
+										class="placeholder"
+										value=""
+										disabled
+										selected
+										hidden
+									>
+										Order by
+									</option>
+									<option>Most Played</option>
+									<option>More Songs</option>
+								</select>
+							</div>
+						</ng-template>
+					</firefly-tab>
+
+					<!-- Songs Tab -->
+					<firefly-tab title="Songs">
+						<p>Coming soon!</p>
+					</firefly-tab>
+
+					<!-- Moods Tab -->
+					<firefly-tab>
+						<ng-template tabTitle>
+							Moods
+							<span
+								class="badge badge-light bg-warning text-white"
+								>21</span
 							>
-								Order by
-							</option>
-							<option>Most Played</option>
-							<option>More Songs</option>
-						</select>
-					</div>
-				</ng-template>
-			</firefly-tab>
+						</ng-template>
 
-			<!-- Songs Tab -->
-			<firefly-tab title="Songs">
-				<p>Coming soon!</p>
-			</firefly-tab>
+						<ng-template tabBody>
+							<p>Coming soon!</p>
+						</ng-template>
+					</firefly-tab>
 
-			<!-- Moods Tab -->
-			<firefly-tab>
-				<ng-template tabTitle>
-					Moods
-					<span class="badge badge-light bg-warning text-white"
-						>21</span
-					>
-				</ng-template>
-
-				<ng-template tabBody>
-					<p>Coming soon!</p>
-				</ng-template>
-			</firefly-tab>
-
-			<ng-container tabFooter>
-				<div class="text-right">
-					<button class="btn btn-primary" [routerLink]="['../music']">
-						View more music data >
-					</button>
-				</div>
+					<ng-container tabFooter>
+						<div class="text-right">
+							<button
+								class="btn btn-primary"
+								[routerLink]="['../music']"
+							>
+								View more music data >
+							</button>
+						</div>
+					</ng-container>
+				</firefly-tab-group>
 			</ng-container>
-		</firefly-tab-group>
+		</ng-template>
 	</div>
 </section>
+
+<ng-template #loadingTemplate>
+	<div class="spinner-border text-primary" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
+</ng-template>

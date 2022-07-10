@@ -5,48 +5,37 @@ import { GridColDef } from '../core/grid/models/grid-col-def.interface';
 import { GridData } from '../core/grid/models/grid-data.interface';
 import { Kpi } from '../core/kpi-widget/models/kpi.interface';
 import { MusicApiService } from '../music/api/music-api.service';
-import { KpiDto } from './api/dtos/kpi.dto';
-import { OverviewApiService } from './api/overview-api.service';
+import { StateTracker } from './store/models/state-tracker.interface';
+import { OverviewStoreService } from './store/overview-store.service';
 
 @Component({
 	selector: 'firefly-overview',
 	templateUrl: 'overview.component.html',
 	styleUrls: ['overview.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	providers: [OverviewStoreService],
 })
 export class OverviewComponent implements OnInit {
 	public kpiData$!: Observable<Kpi[]>;
+	public loadingState$!: Observable<StateTracker>;
+	public connectionErrorState$!: Observable<StateTracker>;
 	public artistGridColDef!: GridColDef[];
 	public artistGridData$!: Observable<GridData[]>;
 
 	constructor(
-		private overviewApiService: OverviewApiService,
+		private overviewStoreService: OverviewStoreService,
 		private musicApiService: MusicApiService
 	) {}
 
 	public ngOnInit(): void {
-		this.kpiData$ = this.overviewApiService.getKpi().pipe(
-			map((kpis) => {
-				return kpis.map((kpi) => ({
-					...kpi,
-					meetTarget: this.doesMeetTarget(kpi),
-					valueDiff: this.calculateValueDiff(kpi),
-				}));
-			})
-		);
+		this.kpiData$ = this.overviewStoreService.kpis$;
+		this.loadingState$ = this.overviewStoreService.loading$;
+		this.connectionErrorState$ = this.overviewStoreService.connectionError$;
 		this.setupTopMusic();
 	}
 
 	public trackKpi(_i: number, value: Kpi): number {
 		return value.current.time.getTime();
-	}
-
-	private doesMeetTarget(kpi: KpiDto): boolean {
-		return kpi.current.value > kpi.previous.value;
-	}
-
-	private calculateValueDiff(kpi: KpiDto): number {
-		return Math.abs(kpi.current.value - kpi.previous.value);
 	}
 
 	private setupTopMusic(): void {
@@ -73,12 +62,10 @@ export class OverviewComponent implements OnInit {
 			},
 		];
 
-		this.artistGridData$ = this.musicApiService
-			.getTopMusic()
-			.pipe(
-				map((dtos) =>
-					dtos.map(({ id, ...rest }) => ({ id, ...rest } as GridData))
-				)
-			);
+		this.artistGridData$ = this.overviewStoreService.topMusic$.pipe(
+			map((dtos) =>
+				dtos.map(({ id, ...rest }) => ({ id, ...rest } as GridData))
+			)
+		);
 	}
 }
