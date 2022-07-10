@@ -5,14 +5,14 @@
 	</div>
 	<footer>
 		<button
-			class="message-banner__action-button btn btn-secondary"
+			class="message-banner__action-button btn btn-secondary btn-custom-rounded"
 			(click)="message?.cancelAction?.callback()"
 		>
 			<span class="material-icons small">close</span>
 			{{ message?.cancelAction?.label || "Cancel" }}
 		</button>
 		<button
-			class="message-banner__action-button btn btn-primary"
+			class="message-banner__action-button btn btn-primary btn-custom-rounded"
 			(click)="message?.okAction?.callback()"
 		>
 			<span class="material-icons small">done</span>
