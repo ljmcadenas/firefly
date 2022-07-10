@@ -1,0 +1,35 @@
+<div class="tab-group__header">
+	<ul class="tab-group__labels nav nav-pills">
+		<li
+			*ngFor="let tab of tabs; trackBy: trackTabBy"
+			class="nav-item"
+			(click)="onTabTitleClicked(tab)"
+		>
+			<span class="nav-link" [class.active]="tab.isActive">
+				<ng-container *ngIf="tab.titleTemplate">
+					<ng-container
+						*ngTemplateOutlet="tab.titleTemplate"
+					></ng-container>
+				</ng-container>
+
+				<ng-container *ngIf="!tab.titleTemplate">
+					{{ tab.title }}
+				</ng-container>
+			</span>
+		</li>
+	</ul>
+
+	<div *ngIf="activeTab?.controls" class="tab-group__controls">
+		<ng-container
+			*ngTemplateOutlet="$any(activeTab.controls)"
+		></ng-container>
+	</div>
+</div>
+
+<div *ngIf="activeTab?.content" class="tab-group__active-content">
+	<ng-container *ngTemplateOutlet="activeTab.content"></ng-container>
+</div>
+
+<div *ngIf="footer" class="tab-group__footer">
+	<ng-content select="[tabFooter]"></ng-content>
+</div>
