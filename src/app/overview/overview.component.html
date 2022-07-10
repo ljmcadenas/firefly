@@ -1,1 +1,25 @@
-overview works
+<section>
+	<header>
+		<h2>Overview</h2>
+	</header>
+	<div
+		class="d-flex flex-column flex-md-row justify-content-around align-items-center"
+	>
+		<firefly-kpi-widget
+			*ngFor="let kpi of kpiData$ | async; trackBy: trackKpi"
+			[label]="kpi.label"
+			[status]="kpi.meetTarget ? 'success' : 'danger'"
+		>
+			<ng-container kpiWidgetValue>{{ kpi.current.value }}</ng-container>
+			<ng-container kpiWidgetValueDescription>
+				<span class="material-icons small font-weight-bold">{{
+					kpi.meetTarget ? "arrow_upward" : "arrow_downward"
+				}}</span>
+				<span class="font-weight-bold m-1">{{ kpi.valueDiff }}</span>
+				<span class="font-italic font-weight-light">{{
+					kpi | kpiFrequencyValueDescription: "days"
+				}}</span>
+			</ng-container>
+		</firefly-kpi-widget>
+	</div>
+</section>
