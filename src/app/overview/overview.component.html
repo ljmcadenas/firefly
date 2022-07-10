@@ -1,6 +1,6 @@
-<section>
-	<header>
-		<h2>Overview</h2>
+<section class="overview__section">
+	<header class="overview__header">
+		<h3 class="m-0">Overview</h3>
 	</header>
 	<div
 		class="d-flex flex-column flex-md-row justify-content-around align-items-center"
@@ -46,9 +46,9 @@
 	</div>
 </section>
 
-<section>
-	<header>
-		<h2>Top Music</h2>
+<section class="overview__section">
+	<header class="overview__header">
+		<h3 class="m-0">Top Music</h3>
 	</header>
 	<div class="text-center">
 		<ng-container
@@ -79,18 +79,35 @@
 
 						<ng-template tabControls>
 							<div class="dropdown">
-								<select>
+								<select
+									[ngModel]="
+										topMusicCurrentOrderCriteria$ | async
+									"
+									(ngModelChange)="
+										onArtistOrderCriteriaChange($event)
+									"
+								>
 									<option
-										class="placeholder"
-										value=""
-										disabled
-										selected
-										hidden
+										[value]="
+											TopMusicArtistOrderCriteria.MostPlayed
+										"
 									>
-										Order by
+										Most Played
 									</option>
-									<option>Most Played</option>
-									<option>More Songs</option>
+									<option
+										[value]="
+											TopMusicArtistOrderCriteria.MoreSongs
+										"
+									>
+										More Songs
+									</option>
+									<option
+										[value]="
+											TopMusicArtistOrderCriteria.Newest
+										"
+									>
+										Newest
+									</option>
 								</select>
 							</div>
 						</ng-template>

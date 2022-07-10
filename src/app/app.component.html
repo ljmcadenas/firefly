@@ -3,10 +3,11 @@
 		[menu]="menuItems"
 		(menuClicked)="onMenuClicked($event)"
 	></firefly-side-navigation>
+
 	<section class="content">
 		<firefly-message-banner></firefly-message-banner>
 
-		<main>
+		<main class="content__main">
 			<router-outlet></router-outlet>
 		</main>
 	</section>

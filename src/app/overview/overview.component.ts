@@ -1,12 +1,20 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	Inject,
+	LOCALE_ID,
+	OnInit,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GridColDef } from '../core/grid/models/grid-col-def.interface';
 import { GridData } from '../core/grid/models/grid-data.interface';
 import { Kpi } from '../core/kpi-widget/models/kpi.interface';
-import { MusicApiService } from '../music/api/music-api.service';
 import { StateTracker } from './store/models/state-tracker.interface';
 import { OverviewStoreService } from './store/overview-store.service';
+
+import { formatNumber } from '@angular/common';
+import { TopMusicArtistOrderCriteria } from './models/top-music-artist-order-criteria.enum';
 
 @Component({
 	selector: 'firefly-overview',
@@ -21,10 +29,12 @@ export class OverviewComponent implements OnInit {
 	public connectionErrorState$!: Observable<StateTracker>;
 	public artistGridColDef!: GridColDef[];
 	public artistGridData$!: Observable<GridData[]>;
+	public topMusicCurrentOrderCriteria$!: Observable<TopMusicArtistOrderCriteria>;
+	public TopMusicArtistOrderCriteria = TopMusicArtistOrderCriteria;
 
 	constructor(
 		private overviewStoreService: OverviewStoreService,
-		private musicApiService: MusicApiService
+		@Inject(LOCALE_ID) public locale: string
 	) {}
 
 	public ngOnInit(): void {
@@ -36,6 +46,14 @@ export class OverviewComponent implements OnInit {
 
 	public trackKpi(_i: number, value: Kpi): number {
 		return value.current.time.getTime();
+	}
+
+	public onArtistOrderCriteriaChange(
+		orderCriteria: TopMusicArtistOrderCriteria
+	): void {
+		this.overviewStoreService.setTopMusicCurrentOrderCriteria(
+			orderCriteria
+		);
 	}
 
 	private setupTopMusic(): void {
@@ -54,18 +72,31 @@ export class OverviewComponent implements OnInit {
 				field: 'plays',
 				label: 'PLAYS',
 				width: '10%',
+				textAlign: 'right',
 			},
 			{
 				field: 'songs',
 				label: 'SONGS',
 				width: '10%',
+				textAlign: 'right',
 			},
 		];
 
-		this.artistGridData$ = this.overviewStoreService.topMusic$.pipe(
-			map((dtos) =>
-				dtos.map(({ id, ...rest }) => ({ id, ...rest } as GridData))
-			)
-		);
+		this.artistGridData$ =
+			this.overviewStoreService.topMusicDataSorted$.pipe(
+				map((dtos) =>
+					dtos.map(
+						({ id, plays, ...rest }) =>
+							({
+								id,
+								plays: formatNumber(plays, this.locale),
+								...rest,
+							} as GridData)
+					)
+				)
+			);
+
+		this.topMusicCurrentOrderCriteria$ =
+			this.overviewStoreService.topMusicCurrentOrderCriteria$;
 	}
 }

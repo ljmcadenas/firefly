@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { GridModule } from '../core/grid/grid.module';
 import { KpiWidgetModule } from '../core/kpi-widget/kpi-widget.module';
 import { TabGroupModule } from '../core/tabs/tab-group.module';
@@ -10,6 +11,7 @@ import { OverviewComponent } from './overview.component';
 @NgModule({
 	imports: [
 		CommonModule,
+		FormsModule,
 		OverviewRoutingModule,
 		KpiWidgetModule,
 		GridModule,

@@ -7,6 +7,7 @@ import { TopMusicDto } from 'src/app/music/api/dtos/top-music.dto';
 import { MusicApiService } from 'src/app/music/api/music-api.service';
 import { KpiDto } from '../api/dtos/kpi.dto';
 import { OverviewApiService } from '../api/overview-api.service';
+import { TopMusicArtistOrderCriteria } from '../models/top-music-artist-order-criteria.enum';
 import { OVERVIEW_INITIAL_STATE } from './models/overview-initial-state';
 import { OverviewState } from './models/overview-state.interface';
 import { StateTracker } from './models/state-tracker.interface';
@@ -21,8 +22,49 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 		}));
 	});
 
-	public readonly topMusic$: Observable<any[]> = this.select(
-		(state) => state.topMusic
+	public readonly topMusicData$: Observable<TopMusicDto[]> = this.select(
+		(state) => state.topMusic.data
+	);
+
+	public readonly topMusicCurrentOrderCriteria$: Observable<TopMusicArtistOrderCriteria> =
+		this.select((state) => state.topMusic.currentOrderCriteria);
+
+	public readonly topMusicDataSorted$: Observable<TopMusicDto[]> =
+		this.select(
+			this.topMusicData$,
+			this.topMusicCurrentOrderCriteria$,
+			(data, criteria) => {
+				switch (criteria) {
+					case TopMusicArtistOrderCriteria.MoreSongs:
+						return this.sortTopMusicDataBy(
+							data,
+							(a, b) => a.songs - b.songs
+						);
+						break;
+					case TopMusicArtistOrderCriteria.MostPlayed:
+						return this.sortTopMusicDataBy(
+							data,
+							(a, b) => a.plays - b.plays
+						);
+						break;
+					default:
+						return this.sortTopMusicDataBy(
+							data,
+							(a, b) => parseInt(a.id, 10) - parseInt(b.id, 10)
+						);
+						break;
+				}
+			}
+		);
+
+	public readonly setTopMusicCurrentOrderCriteria = this.updater(
+		(state, criteria: TopMusicArtistOrderCriteria) => ({
+			...state,
+			topMusic: {
+				...state.topMusic,
+				currentOrderCriteria: criteria,
+			},
+		})
 	);
 
 	// TODO: improve typings for error and loading states by making them strong typed
@@ -87,7 +129,13 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 	}
 
 	private processTopMusicResponse(response: TopMusicDto[]): void {
-		this.patchState({ topMusic: response });
+		this.patchState((state) => ({
+			...state,
+			topMusic: {
+				...state.topMusic,
+				data: response,
+			},
+		}));
 	}
 
 	private updateLoadingState(key: string, value: boolean): void {
@@ -118,5 +166,12 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 
 	private fakeServerDelay(): number {
 		return Math.ceil(Math.random() * 5) * 1000;
+	}
+
+	private sortTopMusicDataBy(
+		data: TopMusicDto[],
+		predicate: (a: TopMusicDto, b: TopMusicDto) => number
+	): TopMusicDto[] {
+		return [...data].sort(predicate);
 	}
 }
