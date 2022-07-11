@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { EMPTY, Observable } from 'rxjs';
-import { catchError, delay, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Kpi } from 'src/app/core/kpi-widget/models/kpi.interface';
 import { TopMusicDto } from 'src/app/music/api/dtos/top-music.dto';
 import { MusicApiService } from 'src/app/music/api/music-api.service';
@@ -14,21 +14,40 @@ import { StateTracker } from './models/state-tracker.interface';
 
 @Injectable()
 export class OverviewStoreService extends ComponentStore<OverviewState> {
-	public readonly kpis$: Observable<Kpi[]> = this.select((state) => {
-		return state.kpis.map((kpi) => ({
-			...kpi,
-			meetTarget: this.doesMeetTarget(kpi),
-			valueDiff: this.calculateValueDiff(kpi),
-		}));
-	});
+	/* Selectors */
 
-	public readonly topMusicData$: Observable<TopMusicDto[]> = this.select(
-		(state) => state.topMusic.data
+	// Kpis
+	public readonly kpis$: Observable<KpiDto[]> = this.select(
+		(state) => state.kpis
 	);
 
-	public readonly topMusicCurrentOrderCriteria$: Observable<TopMusicArtistOrderCriteria> =
-		this.select((state) => state.topMusic.currentOrderCriteria);
+	// KpisForWidget
+	public readonly kpisForWidget$: Observable<Kpi[]> = this.select(
+		this.kpis$,
+		(kpis) => {
+			return kpis.map((kpi) => ({
+				...kpi,
+				meetTarget: this.doesMeetTarget(kpi),
+				valueDiff: this.calculateValueDiff(kpi),
+			}));
+		}
+	);
 
+	// TopMusic
+	public readonly topMusic$: Observable<OverviewState['topMusic']> =
+		this.select((state) => state.topMusic);
+
+	// TopMusicData
+	public readonly topMusicData$: Observable<TopMusicDto[]> = this.select(
+		this.topMusic$,
+		(state) => state.data
+	);
+
+	// topMusicCurrentOrderCriteria
+	public readonly topMusicCurrentOrderCriteria$: Observable<TopMusicArtistOrderCriteria> =
+		this.select(this.topMusic$, (state) => state.currentOrderCriteria);
+
+	// topMusicDataSorted
 	public readonly topMusicDataSorted$: Observable<TopMusicDto[]> =
 		this.select(
 			this.topMusicData$,
@@ -57,6 +76,20 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 			}
 		);
 
+	// TODO: improve typings for error and loading states by making them strong typed
+	// ConnectionError
+	public readonly connectionError$: Observable<StateTracker> = this.select(
+		(state) => state.connectionError
+	);
+
+	// Loading
+	public readonly loading$: Observable<StateTracker> = this.select(
+		(state) => state.loading
+	);
+
+	/* Actions */
+
+	// setTopMusicCurrentOrderCriteria
 	public readonly setTopMusicCurrentOrderCriteria = this.updater(
 		(state, criteria: TopMusicArtistOrderCriteria) => ({
 			...state,
@@ -67,22 +100,15 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 		})
 	);
 
-	// TODO: improve typings for error and loading states by making them strong typed
-	public readonly connectionError$: Observable<StateTracker> = this.select(
-		(state) => state.connectionError
-	);
-
-	public readonly loading$: Observable<StateTracker> = this.select(
-		(state) => state.loading
-	);
+	/* Effects */
 
 	// TODO reduce boilerplate code
+	// getKpis
 	private readonly getKpis = this.effect(() => {
 		this.updateLoadingState('getKpi', true);
 		this.updateConnectionErrorState('getKpi', false);
 
 		return this.overviewApiService.getKpi().pipe(
-			delay(this.fakeServerDelay()),
 			tap({
 				next: (kpis) => {
 					this.updateLoadingState('getKpi', false);
@@ -97,12 +123,12 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 		);
 	});
 
+	// getTopMusic
 	private readonly getTopMusic = this.effect(() => {
 		this.updateLoadingState('getTopMusic', true);
 		this.updateConnectionErrorState('getTopMusic', false);
 
 		return this.musicApiService.getTopMusic().pipe(
-			delay(this.fakeServerDelay()),
 			tap({
 				next: (topMusic) => {
 					this.updateLoadingState('getTopMusic', false);
@@ -162,10 +188,6 @@ export class OverviewStoreService extends ComponentStore<OverviewState> {
 
 	private calculateValueDiff(kpi: KpiDto): number {
 		return Math.abs(kpi.current.value - kpi.previous.value);
-	}
-
-	private fakeServerDelay(): number {
-		return Math.ceil(Math.random() * 5) * 1000;
 	}
 
 	private sortTopMusicDataBy(

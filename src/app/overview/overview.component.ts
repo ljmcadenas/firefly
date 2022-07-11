@@ -38,7 +38,7 @@ export class OverviewComponent implements OnInit {
 	) {}
 
 	public ngOnInit(): void {
-		this.kpiData$ = this.overviewStoreService.kpis$;
+		this.kpiData$ = this.overviewStoreService.kpisForWidget$;
 		this.loadingState$ = this.overviewStoreService.loading$;
 		this.connectionErrorState$ = this.overviewStoreService.connectionError$;
 		this.setupTopMusic();

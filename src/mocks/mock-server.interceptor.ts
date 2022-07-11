@@ -8,6 +8,7 @@ import {
 	HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { delay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { TOP_MUSIC_DTOS } from './music.mock';
 import { KPI_DTOS } from './overview.mock';
@@ -35,9 +36,13 @@ export class MockServerInterceptor implements HttpInterceptor {
 					status: 200,
 					body: MOCK_RESOURCES[urlWithParams],
 				})
-			);
+			).pipe(delay(this.fakeServerDelay()));
 		}
 
 		return next.handle(req);
+	}
+
+	private fakeServerDelay(): number {
+		return Math.ceil(Math.random() * 5) * 1000;
 	}
 }
