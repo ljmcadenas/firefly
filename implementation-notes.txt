@@ -1,0 +1,18 @@
+Hey Design and FE folks,
+	- The design was stuck to closely.
+	- Navigation: the mobile navigation was created from scratch. Please, check it out and let me know if you are happy with it.
+	- Overview background image: can you please provide this asset in an isolated image?
+	- I need to improve the banner message's animation.
+	- I need to improve accesibility
+	- I still need to match some colors like the banner-message button's color and the top-music tab's labels.
+	- We need to increase code coverage.
+	- We might want to upgrade Angular to its latest version (14)
+	- We might want to upgrade Bootstrap to its latest version (5)
+
+Sorry, I have been busy and didn't have much time :/
+
+
+
+Hey BE folks,
+	- I have updated the "overviewData" model and remaned to KPI as discussed. It has also allowed me to implement some extra Angular features :)
+	- I have changed the way the mock data is injected. When you feel ready to integrate our BE, you will want to remove the HTTP_INTERCEPTOR called 'MockServer'.
