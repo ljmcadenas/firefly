@@ -27,7 +27,7 @@
 					[status]="kpi.meetTarget ? 'success' : 'danger'"
 				>
 					<ng-container kpiWidgetValue>{{
-						kpi.current.value
+						kpi.current.value | number
 					}}</ng-container>
 					<ng-container kpiWidgetValueDescription>
 						<span class="material-icons small font-weight-bold">{{
