@@ -66,9 +66,7 @@ export class UserSettingsService {
 						this.messageBannerService
 							.addMessage(message)
 							.then(({ success: accepted }) => {
-								if (accepted) {
-									this.updateUserSetting();
-								}
+								this.updateUserSetting();
 							});
 					});
 			}
