@@ -1,60 +1,64 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppComponent } from 'src/app/app.component';
-import { OverviewComponent } from 'src/app/components/overview/overview.component';
-import { SideNavigationComponent } from 'src/app/components/side-navigation/side-navigation.component';
-import { TopMusicComponent } from 'src/app/components/top-music/top-music.component';
+import { CommonModule } from '@angular/common';
+import { TestBed } from '@angular/core/testing';
+import { subscribeSpyTo } from '@hirez_io/observer-spy';
 import { MessageBannerService } from './message-banner.service';
+import { MessageBanner } from './models/message-banner.interface';
 
-describe('MessageBannerService', () => {
-  let service: MessageBannerService;
-  let fixture: ComponentFixture<AppComponent>;
-  let app: AppComponent;
+describe('message-banner', () => {
+	describe('message-banner.service', () => {
+		beforeEach(() => {
+			TestBed.configureTestingModule({
+				imports: [CommonModule],
+				providers: [MessageBannerService],
+			});
+		});
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        SideNavigationComponent,
-        OverviewComponent,
-        TopMusicComponent
-      ],
-      providers: [MessageBannerService],
+		describe('constructor', () => {
+			it('should create an instance of the service', () => {
+				// Arrange / Act
+				const serviceUnderTest = TestBed.inject(MessageBannerService);
 
-    }).compileComponents();
-  });
+				// Assert
+				expect(
+					serviceUnderTest instanceof MessageBannerService
+				).toBeTruthy();
+			});
+		});
 
-  beforeEach(() => {
-    service = TestBed.inject(MessageBannerService);
-    fixture = TestBed.createComponent(AppComponent);
-    app = fixture.componentInstance;
-  });
+		describe('addMessage', () => {
+			it('should increase the queue by 1', () => {
+				// Arrange
+				const serviceUnderTest = TestBed.inject(MessageBannerService);
+				const mockMessage: MessageBanner = {
+					title: 'test',
+					body: 'does it work?',
+				};
 
-  describe('display banner function', () => {
-    describe("should show the", () => {
-      it('banner', () => {
-        service.displayBanner("", "");
-        expect(fixture.nativeElement.querySelector("#banner")).toBeTruthy();
-      })
+				// Act
+				const promise = serviceUnderTest.addMessage(mockMessage);
 
-      it('title', () => {
-        service.displayBanner("foo", "");
-        expect(fixture.nativeElement.querySelector("#banner h2").innerText).toEqual("foo");
-      })
+				// Assert
+				expect(serviceUnderTest['queue'].length).toBe(1);
+			});
+		});
 
-      it('message', () => {
-        service.displayBanner("", "foo");
-        expect(fixture.nativeElement.querySelector("#banner p").innerText).toEqual("foo");
-      })
+		describe('when the queue is empty', () => {
+			it('should it should dispatch the next message', () => {
+				// Arrange
+				const serviceUnderTest = TestBed.inject(MessageBannerService);
+				const mockMessage: MessageBanner = {
+					title: 'test',
+					body: 'does it work?',
+				};
 
-      it('custom accept text', () => {
-        service.displayBanner("", "", "foo");
-        expect(fixture.nativeElement.querySelector("#banner #accpectButton").innerText).toEqual("foo");
-      })
+				// Act
+				const dispatchNextMessageSpy = subscribeSpyTo(
+					serviceUnderTest['dispatchNextMessage$']
+				);
 
-      it('custom reject text', () => {
-        service.displayBanner("", "", "", "foo");
-        expect(fixture.nativeElement.querySelector("#banner #rejectButton").innerText).toEqual("foo");
-      })
-    })
-  });
+				// Assert
+				expect(dispatchNextMessageSpy.receivedNext()).toBeTrue();
+			});
+		});
+	});
 });
